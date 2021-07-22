@@ -10,19 +10,25 @@ using System.Windows.Forms;
 using Hypermc.Data;
 using Hypermc.Utility;
 using HyperMC.CurseForge;
+
 namespace Hypermc.UI.Dialogs
 {
 	public partial class CreateModpackDialog : Form
 	{
-		private readonly IForgeClient _forgeClient;
 
-		public ModpackData? Data { get; private set; }
 
-		public CreateModpackDialog()
+        private readonly IForgeClient _forgeClient;
+
+        public ModpackData? Data { get; private set; }
+		public ModpackData? DataForge { get; private set; }
+
+
+		public CreateModpackDialog(IForgeClient forgeClient)
 		{
 			InitializeComponent();
-            Load += CreateModpackDialog_Load;
-			_forgeClient = new ForgeClient();
+
+      _forgeClient = forgeClient;
+      Load += CreateModpackDialog_Load;
 
 			List<dynamic> supported_versions;
 		}
@@ -35,6 +41,10 @@ namespace Hypermc.UI.Dialogs
 			cmbx_McVersion.DataSource = versions;
 			cmbx_McVersion.DisplayMember = "VersionString";
 		}
+
+
+        
+
 
         private void Hbtn_Ok_Click(object sender, EventArgs e)
 		{
@@ -54,7 +64,8 @@ namespace Hypermc.UI.Dialogs
 				return;
 			}
 
-			Data = new ModpackData(txb_Name.Text, Properties.Resources.DefaultModpackImage, null);
+			Data = new ModpackData(txb_Name.Text,  Properties.Resources.DefaultModpackImage, null);
+			DataForge = new ModpackData(cmbx_FmlVersion.Text, Properties.Resources.DefaultModpackImage, null);
 			DialogResult = DialogResult.OK;
 			Close();
 		}
@@ -66,6 +77,11 @@ namespace Hypermc.UI.Dialogs
 		}
 
         private void cmbx_McVersion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cpy_right_Click(object sender, EventArgs e)
         {
 
         }

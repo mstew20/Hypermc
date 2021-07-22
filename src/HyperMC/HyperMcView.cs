@@ -21,16 +21,17 @@ namespace Hypermc
 {
 	public partial class HyperMcView : Form, IViewHost
 	{
+
 		private readonly IForgeClient _forgeClient;
 
-		public HyperMcView()
+		public HyperMcView(IForgeClient forgeClient)
 		{
 			InitializeComponent();
-			_forgeClient = new ForgeClient();
 
+      _forgeClient = forgeClient;
 			_modpacks = new();
 			_modpacks.CollectionChanged += ModpacksUpdated;
-		}
+        }
 
 		private void HyperMcView_Load(object sender, EventArgs e)
 		{
@@ -193,8 +194,9 @@ namespace Hypermc
 
 		private IView? _view;
 		private IView? _viewPrev;
+        private readonly IForgeClient _forgeClient;
 
-		public void SetView(IView view, object? data = null)
+        public void SetView(IView view, object? data = null)
 		{
 			if (_view is not null)
 			{
