@@ -16,10 +16,10 @@ namespace Hypermc
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static async Task Main()
         {
             Provider = ConfigureService();
-            Provider.GetRequiredService<IUserSettings>().Initialize();
+            await Provider.GetRequiredService<IUserSettings>().Initialize();
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
