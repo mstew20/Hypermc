@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hypermc.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,15 +13,17 @@ namespace Hypermc.Settings
     {
         private readonly string _appPath;
         private readonly string _settingsFile;
+        private readonly IFileUesr _fileUesr;
 
         public string MinecraftPath { get; set; }
         public string ModPacksPath { get; set; }
 
-        public UserSettings()
+        public UserSettings(IFileUesr fileUesr)
         {
             // TODO: possibly move the file names to the appsettings.
             _appPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\.hypermc";
             _settingsFile = $@"{_appPath}\settings.json";
+            _fileUesr = fileUesr;
 
             MinecraftPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\.minecraft";
             ModPacksPath = $@"{MinecraftPath}\ModPacks";
@@ -35,8 +38,7 @@ namespace Hypermc.Settings
 
             if (File.Exists(_settingsFile))
             {
-                using var stream = new FileStream(_settingsFile, FileMode.Open, FileAccess.Read);
-                var settings = await JsonSerializer.DeserializeAsync<UserSettings>(stream);
+                var settings = await _fileUesr.ReadFile<UserSettings>(_settingsFile);
 
                 MinecraftPath = settings.MinecraftPath;
                 ModPacksPath = settings.ModPacksPath;
@@ -48,8 +50,7 @@ namespace Hypermc.Settings
             MinecraftPath = mcPath;
             ModPacksPath = modPath;
 
-            string settingsToSave = JsonSerializer.Serialize(this);
-            await File.WriteAllTextAsync(_settingsFile, settingsToSave);
+            await _fileUesr.WriteToFile(this, _settingsFile);
         }
     }
 }

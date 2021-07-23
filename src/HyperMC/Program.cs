@@ -1,3 +1,4 @@
+using Hypermc.Services;
 using Hypermc.Settings;
 using Hypermc.UI.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +35,8 @@ namespace Hypermc
             services.AddSingleton<HyperMcView>()
                     .AddSingleton<IUserSettings, UserSettings>();
 
-            services.AddTransient<SettingView>();
+            services.AddTransient<SettingView>()
+                    .AddTransient<IFileUesr, FileUser>();
 
             services.AddForgeClient();
 
